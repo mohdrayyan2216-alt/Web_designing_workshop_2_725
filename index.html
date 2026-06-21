@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Amazon.in: Online Shopping India</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #EAEDED; margin: 0; }
+
+    /* ── TOP NAV ── */
+    .amazon-nav {
+      background: #131921;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 6px;
+      flex-wrap: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav-logo {
+      color: #FF9900;
+      font-size: 22px;
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+      border: 1px solid transparent;
+      padding: 4px 6px;
+      border-radius: 2px;
+    }
+    .nav-logo:hover { border-color: #fff; color: #FF9900; }
+    .nav-logo sup { font-size: 10px; color: #fff; font-weight: 400; }
+
+    .nav-deliver {
+      display: flex; flex-direction: column;
+      padding: 4px 8px; border: 1px solid transparent;
+      border-radius: 2px; cursor: pointer; white-space: nowrap;
+    }
+    .nav-deliver:hover { border-color: #fff; }
+    .nav-deliver .d-label { font-size: 11px; color: #ccc; }
+    .nav-deliver .d-loc { font-size: 13px; font-weight: 700; }
+
+    /* Search */
+    .nav-search { flex: 1; display: flex; min-width: 0; }
+    .search-select {
+      background: #f3f3f3; border: none; border-radius: 4px 0 0 4px;
+      font-size: 12px; padding: 0 6px; cursor: pointer; color: #333; width: 60px;
+    }
+    .search-select:focus { outline: none; }
+    .search-input {
+      flex: 1; border: none; font-size: 15px; padding: 6px 10px; color: #000; min-width: 0;
+    }
+    .search-input:focus { outline: none; }
+    .search-btn {
+      background: #FF9900; border: none; border-radius: 0 4px 4px 0;
+      padding: 0 14px; cursor: pointer; font-size: 20px; color: #333;
+    }
+    .search-btn:hover { background: #FA8900; }
+
+    .nav-action {
+      display: flex; flex-direction: column;
+      padding: 4px 8px; border: 1px solid transparent;
+      border-radius: 2px; cursor: pointer; white-space: nowrap;
+      color: #fff; text-decoration: none;
+    }
+    .nav-action:hover { border-color: #fff; color: #fff; }
+    .nav-action .a-label { font-size: 11px; color: #ccc; }
+    .nav-action .a-text { font-size: 13px; font-weight: 700; }
+
+    .nav-cart {
+      display: flex; align-items: flex-end;
+      padding: 4px 8px; border: 1px solid transparent;
+      border-radius: 2px; cursor: pointer;
+      color: #fff; text-decoration: none; gap: 4px;
+    }
+    .nav-cart:hover { border-color: #fff; color: #fff; }
+    .cart-icon { font-size: 30px; position: relative; }
+    .cart-count {
+      color: #FF9900; font-weight: 700; font-size: 17px;
+      position: absolute; top: 0px; left: 16px;
+    }
+    .cart-text { font-size: 13px; font-weight: 700; padding-bottom: 4px; }
+
+    /* ── SUB NAV ── */
+    .sub-nav {
+      background: #232F3E;
+      display: flex; align-items: center;
+      padding: 4px 12px; gap: 2px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .sub-nav::-webkit-scrollbar { display: none; }
+    .sub-nav-item {
+      color: #fff; font-size: 13px; padding: 6px 10px;
+      white-space: nowrap; cursor: pointer;
+      border: 1px solid transparent; border-radius: 2px; text-decoration: none;
+    }
+    .sub-nav-item:hover { border-color: #fff; color: #fff; }
+
+    /* ── CAROUSEL ── */
+    .hero-wrap { position: relative; }
+    .carousel-item img { width: 100%; max-height: 500px; object-fit: cover; }
+    .hero-wrap::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 130px;
+      background: linear-gradient(to bottom, transparent, #EAEDED);
+      pointer-events: none; z-index: 5;
+    }
+
+    /* ── CATEGORY CARDS ── */
+    .cat-card {
+      background: #fff; border-radius: 4px; padding: 16px;
+      cursor: pointer; transition: box-shadow .2s; height: 100%;
+    }
+    .cat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+    .cat-card h6 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .cat-grid img { width: 100%; object-fit: cover; border-radius: 3px; transition: transform .2s; }
+    .cat-grid img:hover { transform: scale(1.05); }
+    .cat-caption { font-size: 12px; color: #333; margin-top: 3px; }
+    .see-more { font-size: 13px; color: #007185; margin-top: 12px; display: block; text-decoration: none; }
+    .see-more:hover { color: #C7511F; text-decoration: underline; }
+
+    /* ── DEALS ── */
+    .deal-section { background: #fff; border-radius: 4px; }
+    .deal-header { padding: 14px 16px 4px; display: flex; justify-content: space-between; align-items: center; }
+    .deal-header h5 { font-size: 20px; font-weight: 700; margin: 0; }
+    .deal-header a { font-size: 13px; color: #007185; text-decoration: none; }
+    .deal-header a:hover { color: #C7511F; }
+    .deal-item { cursor: pointer; }
+    .deal-item img { width: 100%; border-radius: 4px; transition: transform .15s; }
+    .deal-item:hover img { transform: scale(1.04); }
+    .badge-off { background: #CC0C39; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-top: 6px; }
+    .deal-price { font-size: 16px; font-weight: 700; }
+    .deal-old { font-size: 12px; color: #565959; text-decoration: line-through; }
+
+    /* ── PRODUCTS ── */
+    .product-section { background: #fff; border-radius: 4px; padding: 16px; }
+    .product-section h5 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .product-card { cursor: pointer; transition: transform .15s; }
+    .product-card:hover { transform: scale(1.03); }
+    .product-card img { width: 100%; object-fit: cover; border-radius: 4px; }
+    .product-card .cap { font-size: 13px; color: #333; margin-top: 4px; }
+    .star { color: #FF9900; }
+
+    /* ── PRIME BANNER ── */
+    .prime-banner {
+      background: linear-gradient(135deg, #232F3E, #37475A);
+      border-radius: 6px; padding: 24px 30px;
+      color: #fff; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+
+    /* ── FOOTER ── */
+    footer { background: #232F3E; color: #fff; margin-top: 20px; }
+    .footer-top { background: #37475A; text-align: center; padding: 14px; cursor: pointer; font-size: 13px; }
+    .footer-top:hover { background: #485769; }
+    .footer-links { padding: 30px 20px 20px; }
+    .footer-col h6 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .footer-col a { display: block; color: #ccc; font-size: 13px; text-decoration: none; margin-bottom: 6px; }
+    .footer-col a:hover { text-decoration: underline; color: #fff; }
+    .footer-bottom { background: #131921; text-align: center; padding: 16px; font-size: 12px; color: #ccc; border-top: 1px solid #3a4553; }
+
+    .section-gap { margin-top: 12px; }
+
+    @media (max-width: 576px) {
+      .hide-xs { display: none !important; }
+      .search-select { width: 44px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ TOP NAV ══════════ -->
+<nav class="amazon-nav">
+  <a class="nav-logo" href="#">amazon<sup>.in</sup></a>
+
+  <div class="nav-deliver hide-xs">
+    <span class="d-label"><i class="bi bi-geo-alt-fill"></i> Deliver to</span>
+    <span class="d-loc">Ghaziabad 201009</span>
+  </div>
+
+  <div class="nav-search">
+    <select class="search-select">
+      <option>All</option>
+      <option>Electronics</option>
+      <option>Books</option>
+      <option>Fashion</option>
+      <option>Mobiles</option>
+      <option>Home</option>
+      <option>Sports</option>
+    </select>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search Amazon.in"/>
+    <button class="search-btn" onclick="doSearch()"><i class="bi bi-search"></i></button>
+  </div>
+
+  <div class="nav-action hide-xs">
+    <span class="a-label"></span>
+    <span class="a-text">🇮🇳 EN</span>
+  </div>
+
+  <a href="#" class="nav-action hide-xs">
+    <span class="a-label">Hello, sign in</span>
+    <span class="a-text">Account &amp; Lists ▾</span>
+  </a>
+
+  <a href="#" class="nav-action hide-xs">
+    <span class="a-label">Returns</span>
+    <span class="a-text">&amp; Orders</span>
+  </a>
+
+  <a href="#" class="nav-cart">
+    <div class="cart-icon position-relative">
+      <i class="bi bi-cart3"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+    <span class="cart-text d-none d-sm-block">Cart</span>
+  </a>
+</nav>
+
+<!-- ══════════ SUB NAV ══════════ -->
+<nav class="sub-nav">
+  <a class="sub-nav-item fw-bold" href="#"><i class="bi bi-list"></i> All</a>
+  <a class="sub-nav-item" href="#">Fresh</a>
+  <a class="sub-nav-item" href="#">MX Player</a>
+  <a class="sub-nav-item" href="#">Sell</a>
+  <a class="sub-nav-item" href="#">Bestsellers</a>
+  <a class="sub-nav-item" href="#">Mobiles</a>
+  <a class="sub-nav-item" href="#">Customer Service</a>
+  <a class="sub-nav-item" href="#">Today's Deals</a>
+  <a class="sub-nav-item" href="#">New Releases</a>
+  <a class="sub-nav-item" href="#">Prime</a>
+  <a class="sub-nav-item" href="#">Fashion</a>
+  <a class="sub-nav-item" href="#">Electronics</a>
+  <a class="sub-nav-item" href="#">Amazon Pay</a>
+  <a class="sub-nav-item" href="#">Home &amp; Kitchen</a>
+</nav>
+
+<!-- ══════════ HERO CAROUSEL ══════════ -->
+<div class="hero-wrap">
+  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3500">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/WLA/GW/D95291346_DesktopTallHero_3000x1200._CB582393715_.jpg"
+             alt="Sale Banner" onerror="this.src='https://placehold.co/1500x500/FF9900/131921?text=Amazon+Great+Indian+Sale'"/>
+      </div>
+      <div class="carousel-item">
+        <img src="https://images-eu.ssl-images-amazon.com/images/G/31/img2021/Irfan/GW/PC_Hero_3000x1200._CB667159060_.jpg"
+             alt="Deals Banner" onerror="this.src='https://placehold.co/1500x500/232F3E/FF9900?text=Deals+of+the+Day'"/>
+      </div>
+      <div class="carousel-item">
+        <img src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Apparel/GW/SS23/PC_QC_3000x1200._CB598114998_.jpg"
+             alt="Fashion Banner" onerror="this.src='https://placehold.co/1500x500/37475A/ffffff?text=Fashion+New+Arrivals'"/>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ CATEGORY CARDS ══════════ -->
+<div class="container-fluid px-3" style="margin-top:-80px;position:relative;z-index:10;">
+  <div class="row g-3">
+
+    <!-- Appliances -->
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Appliances for your home | Up to 55% off</h6>
+        <div class="cat-grid">
+          <div>
+            <img src="https://placehold.co/200x150/dbeafe/1e3a8a?text=AC" alt="AC"/>
+            <div class="cat-caption">Air conditioners</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fef9c3/854d0e?text=Fridge" alt="Fridge"/>
+            <div class="cat-caption">Refrigerators</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/dcfce7/166534?text=Microwave" alt="Microwave"/>
+            <div class="cat-caption">Microwaves</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fce7f3/9d174d?text=Washer" alt="Washing Machine"/>
+            <div class="cat-caption">Washing machines</div>
+          </div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+
+    <!-- Home Style -->
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Revamp your home in style</h6>
+        <div class="cat-grid">
+          <div>
+            <img src="https://placehold.co/200x150/fdf4ff/7e22ce?text=Cushions" alt="Cushions"/>
+            <div class="cat-caption">Cushion covers &amp; bedsheets</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fff7ed/9a3412?text=Figurines" alt="Figurines"/>
+            <div class="cat-caption">Figurines &amp; vases</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/f0fdf4/14532d?text=Storage" alt="Storage"/>
+            <div class="cat-caption">Home storage</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fefce8/713f12?text=Lighting" alt="Lighting"/>
+            <div class="cat-caption">Lighting solutions</div>
+          </div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+
+    <!-- Bulk Order -->
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Bulk order discounts + Up to 18% GST savings</h6>
+        <div class="cat-grid">
+          <div>
+            <img src="https://placehold.co/200x150/eff6ff/1e40af?text=Laptops" alt="Laptops"/>
+            <div class="cat-caption">Up to 45% off | Laptops</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/f0fdf4/15803d?text=Kitchen+App" alt="Kitchen"/>
+            <div class="cat-caption">Up to 60% off | Kitchen</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/faf5ff/6b21a8?text=Office+Furn." alt="Office"/>
+            <div class="cat-caption">Min. 50% off | Office furniture</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fff7ed/9a3412?text=Amzn+Biz" alt="Business"/>
+            <div class="cat-caption">Register using GST, Udyam…</div>
+          </div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+
+    <!-- Home Essentials -->
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Starting ₹49 | Deals on home essentials</h6>
+        <div class="cat-grid">
+          <div>
+            <img src="https://placehold.co/200x150/ecfdf5/065f46?text=Cleaning" alt="Cleaning"/>
+            <div class="cat-caption">Cleaning supplies</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/e0f2fe/0c4a6e?text=Bathroom" alt="Bathroom"/>
+            <div class="cat-caption">Bathroom accessories</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fef3c7/92400e?text=Tools" alt="Tools"/>
+            <div class="cat-caption">Home tools</div>
+          </div>
+          <div>
+            <img src="https://placehold.co/200x150/fce7f3/831843?text=Wallpapers" alt="Wallpapers"/>
+            <div class="cat-caption">Wallpapers</div>
+          </div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ TODAY'S DEALS ══════════ -->
+<div class="container-fluid px-3 section-gap">
+  <div class="deal-section">
+    <div class="deal-header">
+      <h5>Today's Deals</h5>
+      <a href="#">See all deals</a>
+    </div>
+    <div class="row g-3 p-3">
+      <div class="col-6 col-sm-4 col-md-2 deal-item" onclick="addToCart()">
+        <img src="https://placehold.co/200x200/f3f4f6/374151?text=🎧+Earbuds" alt="Earbuds"/>
+        <span class="badge-off">50% off</span>
+        <div class="deal-price">₹999</div>
+        <div class="deal-old">₹1,999</div>
+        <div style="font-size:12px;color:#333">Wireless Earbuds</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-2 deal-item" onclick="addToCart()">
+        <img src="https://placehold.co/200x200/f0fdf4/166534?text=⌚+SmartWatch" alt="Watch"/>
+        <span class="badge-off">40% off</span>
+        <div class="deal-price">₹1,499</div>
+        <div class="deal-old">₹2,499</div>
+        <div style="font-size:12px;color:#333">Smart Watch</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-2 deal-item" onclick="addToCart()">
+        <img src="https://placehold.co/200x200/eff6ff/1e3a8a?text=🔊+Speaker" alt="Speaker"/>
+        <span class="badge-off">35% off</span>
+        <div class="deal-price">₹2,199</div>
+        <div class="deal-old">₹3,399</div>
+        <div style="font-size:12px;color:#333">Bluetooth Speaker</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-2 deal-item" onclick="addToCart()">
+        <img src="https://placehold.co/200x200/fefce8/713f12?text=🔋+PowerBank" alt="PowerBank"/>
+        <span class="badge-off">60% off</span>
+        <div class="deal-price">₹499</div>
+        <div class="deal-old">₹1,249</div>
+        <div style="font-size:12px;color:#333">20000mAh Power Bank</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-2 deal-item" onclick="addToCart()">
+        <img src="https://placehold.co/200x200/fdf4ff/7e22ce?text=💡+USB+Hub" alt="USB Hub"/>
+        <span class="badge-off">45% off</span>
+        <div class="deal-price">₹799</div>
+        <div class="deal-old">₹1,449</div>
+        <div style="font-size:12px;color:#333">USB-C Hub 7-in-1</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-2 deal-item" onclick="addToCart()">
+        <img src="https://placehold.co/200x200/fff7ed/9a3412?text=💻+Stand" alt="Laptop Stand"/>
+        <span class="badge-off">55% off</span>
+        <div class="deal-price">₹1,299</div>
+        <div class="deal-old">₹2,899</div>
+        <div style="font-size:12px;color:#333">Laptop Stand (Aluminium)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MORE CATEGORIES ══════════ -->
+<div class="container-fluid px-3 section-gap">
+  <div class="row g-3">
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Fashion | Upto 60% Off</h6>
+        <div class="cat-grid">
+          <div><img src="https://placehold.co/200x150/fce7f3/9d174d?text=Men" alt="Men"/><div class="cat-caption">Men</div></div>
+          <div><img src="https://placehold.co/200x150/fdf4ff/7e22ce?text=Women" alt="Women"/><div class="cat-caption">Women</div></div>
+          <div><img src="https://placehold.co/200x150/eff6ff/1e40af?text=Kids" alt="Kids"/><div class="cat-caption">Kids</div></div>
+          <div><img src="https://placehold.co/200x150/fef9c3/854d0e?text=Accessories" alt="Accessories"/><div class="cat-caption">Accessories</div></div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Mobiles | Starting ₹6,999</h6>
+        <div class="cat-grid">
+          <div><img src="https://placehold.co/200x150/dbeafe/1e3a8a?text=Samsung" alt="Samsung"/><div class="cat-caption">Samsung</div></div>
+          <div><img src="https://placehold.co/200x150/f3f4f6/374151?text=Apple" alt="Apple"/><div class="cat-caption">Apple</div></div>
+          <div><img src="https://placehold.co/200x150/dcfce7/14532d?text=OnePlus" alt="OnePlus"/><div class="cat-caption">OnePlus</div></div>
+          <div><img src="https://placehold.co/200x150/fee2e2/991b1b?text=Redmi" alt="Redmi"/><div class="cat-caption">Redmi</div></div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Books | Min. 50% off</h6>
+        <div class="cat-grid">
+          <div><img src="https://placehold.co/200x150/fef9c3/854d0e?text=Fiction" alt="Fiction"/><div class="cat-caption">Fiction</div></div>
+          <div><img src="https://placehold.co/200x150/dcfce7/166534?text=Self+Help" alt="Self Help"/><div class="cat-caption">Self Help</div></div>
+          <div><img src="https://placehold.co/200x150/dbeafe/1e3a8a?text=Children" alt="Children"/><div class="cat-caption">Children</div></div>
+          <div><img src="https://placehold.co/200x150/fee2e2/991b1b?text=Academic" alt="Academic"/><div class="cat-caption">Academic</div></div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="cat-card">
+        <h6>Beauty &amp; Makeup | Under ₹499</h6>
+        <div class="cat-grid">
+          <div><img src="https://placehold.co/200x150/fce7f3/9d174d?text=Lipstick" alt="Lipstick"/><div class="cat-caption">Lipstick</div></div>
+          <div><img src="https://placehold.co/200x150/fff7ed/9a3412?text=Foundation" alt="Foundation"/><div class="cat-caption">Foundation</div></div>
+          <div><img src="https://placehold.co/200x150/ecfdf5/065f46?text=Skincare" alt="Skincare"/><div class="cat-caption">Skincare</div></div>
+          <div><img src="https://placehold.co/200x150/e0f2fe/0c4a6e?text=Haircare" alt="Haircare"/><div class="cat-caption">Haircare</div></div>
+        </div>
+        <a href="#" class="see-more">See more</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BEST SELLERS ══════════ -->
+<div class="container-fluid px-3 section-gap">
+  <div class="product-section">
+    <h5>Best Sellers in Electronics</h5>
+    <div class="row g-3">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="product-card" onclick="addToCart()">
+          <img src="https://placehold.co/200x200/f3f4f6/374151?text=🎧+Headphone" alt="Headphone"/>
+          <div class="cap">boAt Rockerz 450 Bluetooth Headphone</div>
+          <div><span class="star">★★★★</span>☆ <small>(8,452)</small></div>
+          <div><strong>₹1,299</strong> <small style="color:#565959;text-decoration:line-through">₹2,990</small></div>
+          <small style="color:green">56% off</small>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="product-card" onclick="addToCart()">
+          <img src="https://placehold.co/200x200/f0fdf4/166534?text=⌚+ColorFit" alt="Watch"/>
+          <div class="cap">Noise ColorFit Pulse Smart Watch</div>
+          <div><span class="star">★★★★</span>☆ <small>(12,100)</small></div>
+          <div><strong>₹1,799</strong> <small style="color:#565959;text-decoration:line-through">₹4,999</small></div>
+          <small style="color:green">64% off</small>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="product-card" onclick="addToCart()">
+          <img src="https://placehold.co/200x200/fefce8/713f12?text=🔋+PowerBank" alt="PowerBank"/>
+          <div class="cap">Ambrane 20000mAh Power Bank</div>
+          <div><span class="star">★★★★</span>★ <small>(5,287)</small></div>
+          <div><strong>₹799</strong> <small style="color:#565959;text-decoration:line-through">₹1,999</small></div>
+          <small style="color:green">60% off</small>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="product-card" onclick="addToCart()">
+          <img src="https://placehold.co/200x200/eff6ff/1e3a8a?text=🎧+TWS" alt="TWS"/>
+          <div class="cap">Boult Audio Z40 True Wireless Earbuds</div>
+          <div><span class="star">★★★★</span>☆ <small>(3,890)</small></div>
+          <div><strong>₹899</strong> <small style="color:#565959;text-decoration:line-through">₹2,499</small></div>
+          <small style="color:green">64% off</small>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="product-card" onclick="addToCart()">
+          <img src="https://placehold.co/200x200/fdf4ff/7e22ce?text=🔌+USB+Hub" alt="USB"/>
+          <div class="cap">AmazonBasics USB-C Hub (Pack of 2)</div>
+          <div><span class="star">★★★★</span>☆ <small>(2,100)</small></div>
+          <div><strong>₹399</strong> <small style="color:#565959;text-decoration:line-through">₹699</small></div>
+          <small style="color:green">43% off</small>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <div class="product-card" onclick="addToCart()">
+          <img src="https://placehold.co/200x200/fff7ed/9a3412?text=🔊+JBL+Go" alt="JBL"/>
+          <div class="cap">JBL Go 3 Portable Waterproof Speaker</div>
+          <div><span class="star">★★★★</span>★ <small>(7,654)</small></div>
+          <div><strong>₹2,499</strong> <small style="color:#565959;text-decoration:line-through">₹4,499</small></div>
+          <small style="color:green">44% off</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PRIME BANNER ══════════ -->
+<div class="container-fluid px-3 section-gap">
+  <div class="prime-banner">
+    <div>
+      <div style="font-size:24px;font-weight:700;color:#FF9900;">Try <em>Prime</em></div>
+      <div style="font-size:14px;margin-top:4px;">FREE delivery, exclusive deals, unlimited streaming &amp; more</div>
+      <div style="font-size:12px;color:#ccc;margin-top:2px;">Start your 30-day free trial today</div>
+    </div>
+    <button class="btn" style="background:#FF9900;color:#131921;font-weight:700;padding:10px 24px;border-radius:4px;font-size:15px;">
+      Try Prime FREE
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ TOAST ══════════ -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="cartToast" class="toast align-items-center text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body fw-bold"><i class="bi bi-cart-check-fill me-2"></i>Item added to cart!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    ▲ Back to top
+  </div>
+  <div class="footer-links">
+    <div class="row g-4">
+      <div class="col-6 col-md-3 footer-col">
+        <h6>Get to Know Us</h6>
+        <a href="#">About Amazon</a>
+        <a href="#">Careers</a>
+        <a href="#">Press Releases</a>
+        <a href="#">Amazon Cares</a>
+        <a href="#">Amazon Science</a>
+      </div>
+      <div class="col-6 col-md-3 footer-col">
+        <h6>Connect with Us</h6>
+        <a href="#"><i class="bi bi-facebook me-1"></i>Facebook</a>
+        <a href="#"><i class="bi bi-twitter-x me-1"></i>Twitter</a>
+        <a href="#"><i class="bi bi-instagram me-1"></i>Instagram</a>
+        <a href="#"><i class="bi bi-youtube me-1"></i>YouTube</a>
+      </div>
+      <div class="col-6 col-md-3 footer-col">
+        <h6>Make Money with Us</h6>
+        <a href="#">Sell on Amazon</a>
+        <a href="#">Amazon Accelerator</a>
+        <a href="#">Amazon Associates</a>
+        <a href="#">Fulfilment by Amazon</a>
+        <a href="#">Advertise Your Products</a>
+      </div>
+      <div class="col-6 col-md-3 footer-col">
+        <h6>Let Us Help You</h6>
+        <a href="#">Your Account</a>
+        <a href="#">Returns Centre</a>
+        <a href="#">Recalls and Product Safety</a>
+        <a href="#">100% Purchase Protection</a>
+        <a href="#">Amazon App Download</a>
+        <a href="#">Help</a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid #3a4553; text-align:center; padding: 20px; background:#131921;">
+    <div style="font-size:24px;font-weight:900;color:#FF9900;">amazon<span style="font-size:14px;color:#fff">.in</span></div>
+    <div class="mt-2">
+      <a href="#" style="color:#ccc;margin:0 8px;font-size:12px;text-decoration:none;">Conditions of Use &amp; Sale</a>
+      <a href="#" style="color:#ccc;margin:0 8px;font-size:12px;text-decoration:none;">Privacy Notice</a>
+      <a href="#" style="color:#ccc;margin:0 8px;font-size:12px;text-decoration:none;">Interest-Based Ads</a>
+    </div>
+    <div class="mt-2" style="font-size:11px;color:#ccc;">© 1996-2026, Amazon.com, Inc. or its affiliates</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Cart counter
+  let cartCount = 0;
+  function addToCart() {
+    cartCount++;
+    document.getElementById('cartCount').textContent = cartCount;
+    const toastEl = document.getElementById('cartToast');
+    const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+    toast.show();
+  }
+
+  // Search
+  function doSearch() {
+    const q = document.getElementById('searchInput').value.trim();
+    if (q) {
+      alert('🔍 Searching for: "' + q + '"\n\nIn a real project, this redirects to search results.');
+    }
+  }
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+</script>
+</body>
+</html>
